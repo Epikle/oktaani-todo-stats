@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 interface TokenState {
   token: string | null;
   setToken: (token: string) => void;
+  resetToken: () => void;
 }
 
 export const useTokenStore = create<TokenState>()(
@@ -11,6 +12,7 @@ export const useTokenStore = create<TokenState>()(
     (set) => ({
       token: null,
       setToken: (token) => set({ token }),
+      resetToken: () => set({ token: null }),
     }),
     {
       name: 'oktaani-todo-stats',

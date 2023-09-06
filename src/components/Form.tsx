@@ -17,15 +17,19 @@ import { StatsTypes } from '@/lib/types';
 export function Form() {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const setToken = useTokenStore((state) => state.setToken);
 
   const formHandler = async (event: FormEvent) => {
     event.preventDefault();
     try {
+      setLoading(true);
       await getStats(StatsTypes.newCollection, input);
       setToken(input);
     } catch (error) {
       setError('Invalid token, please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,6 +51,7 @@ export function Form() {
               <Input
                 id="name"
                 placeholder="Type a valid token here"
+                type="password"
                 onChange={(e) => {
                   setError('');
                   setInput(e.target.value);
@@ -55,8 +60,11 @@ export function Form() {
               />
             </div>
             {error && <p className="text-sm text-red-600">{error}</p>}
-            <Button className="grow" disabled={!input.length || !!error}>
-              Add token
+            <Button
+              className="grow"
+              disabled={!input.length || !!error || loading}
+            >
+              {loading ? 'Loading' : 'Add token'}
             </Button>
           </div>
         </form>
