@@ -9,12 +9,23 @@ import {
 } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
+import { useTokenStore } from '@/stores/useTokenStore';
+import { getStats } from '@/services/stats';
+import { cn } from '@/lib/utils';
 
 export function Form() {
   const [input, setInput] = useState('');
-  const formHandler = (event: FormEvent) => {
+  const [error, setError] = useState('');
+  const setToken = useTokenStore((state) => state.setToken);
+
+  const formHandler = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(input);
+    try {
+      await getStats(input);
+      setToken(input);
+    } catch (error) {
+      setError('Invalid token, please try again.');
+    }
   };
 
   return (
@@ -29,15 +40,21 @@ export function Form() {
         <form onSubmit={formHandler}>
           <div className="grid gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Authentication Token</Label>
+              <Label htmlFor="name" className={cn({ 'text-red-600': error })}>
+                Authentication Token
+              </Label>
               <Input
                 id="name"
                 placeholder="Type a valid token here"
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setError('');
+                  setInput(e.target.value);
+                }}
                 required
               />
             </div>
-            <Button className="grow" disabled={!input.length}>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            <Button className="grow" disabled={!input.length || !!error}>
               Add token
             </Button>
           </div>
