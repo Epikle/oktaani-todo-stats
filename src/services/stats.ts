@@ -1,13 +1,15 @@
 import axios from 'axios';
+import { StatsTypes } from '@/lib/types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-export const getStats = async (token: string): Promise<void> => {
-  const { data } = await api.get<unknown>(
-    `/stats/?type=shareCollection&key=${token}`
-  );
+export const getStats = async (
+  type: StatsTypes,
+  token: string
+): Promise<{ point: number; fill?: string }[]> => {
+  const { data } = await api.get(`/stats/?type=${type}&key=${token}`);
 
-  console.log(data);
+  return data;
 };

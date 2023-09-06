@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/Label';
 import { useTokenStore } from '@/stores/useTokenStore';
 import { getStats } from '@/services/stats';
 import { cn } from '@/lib/utils';
+import { StatsTypes } from '@/lib/types';
 
 export function Form() {
   const [input, setInput] = useState('');
@@ -21,7 +22,7 @@ export function Form() {
   const formHandler = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await getStats(input);
+      await getStats(StatsTypes.newCollection, input);
       setToken(input);
     } catch (error) {
       setError('Invalid token, please try again.');
