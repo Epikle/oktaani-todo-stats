@@ -5,3 +5,8 @@ export enum StatsTypes {
   deleteItem = 'deleteItem',
   shareCollection = 'shareCollection',
 }
+
+export interface DataPoint {
+  point: number;
+  fill?: string;
+}

@@ -3,15 +3,10 @@ import { Form } from './components/Form';
 import { StatCard } from './components/StatCard';
 import { useTokenStore } from './stores/useTokenStore';
 import { getStats } from './services/stats';
-import { StatsTypes } from './lib/types';
-
-import './globals.css';
+import { type DataPoint, StatsTypes } from './lib/types';
 import { Button } from './components/ui/Button';
 
-interface DataPoint {
-  point: number;
-  fill?: string;
-}
+import './globals.css';
 
 interface StatsData {
   newCollection: DataPoint[];
@@ -31,7 +26,7 @@ const initialState: StatsData = {
 
 function App() {
   const [statsData, setStatsData] = useState(initialState);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const token = useTokenStore((state) => state.token);
   const resetToken = useTokenStore((state) => state.resetToken);
 
