@@ -8,12 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/Card';
+import { LoadingSpinner } from './ui/LoadingSpinner';
+import type { DataPoint } from '@/lib/types';
 
 interface StatCardProps {
   title: string;
   description: string;
   unit: string;
-  data: { point: number; fill?: string }[];
+  data: DataPoint[];
   loading: boolean;
 }
 
@@ -50,7 +52,7 @@ export function StatCard({
       </CardHeader>
       <CardContent className="pb-0">
         <div className="flex items-center justify-center space-x-2">
-          {loading && 'Loading'}
+          {loading && <LoadingSpinner />}
           {!loading && (
             <div className="flex-1 text-center">
               <div className="text-5xl font-bold tracking-tighter">
@@ -59,15 +61,13 @@ export function StatCard({
               <div className="text-[0.70rem] uppercase text-muted-foreground">
                 {unit}
               </div>
-              {changeFromLastMonth && (
-                <div className="text-sm text-muted-foreground mt-2">
-                  <b>{changeFromLastMonth}</b> from last month
-                </div>
-              )}
+              <div className="text-sm text-muted-foreground mt-2">
+                <b>{changeFromLastMonth}</b> from last month
+              </div>
             </div>
           )}
         </div>
-        {changeFromLastMonth && (
+        {!loading && (
           <div className="my-3 h-[60px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
@@ -93,7 +93,7 @@ export function StatCard({
         )}
       </CardContent>
       <CardFooter className="text-sm text-muted-foreground justify-center">
-        last 12 months
+        {!loading && 'last 12 months'}
       </CardFooter>
     </Card>
   );
