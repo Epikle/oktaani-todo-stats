@@ -31,32 +31,41 @@ const initialState: StatsData = {
 
 function App() {
   const [statsData, setStatsData] = useState(initialState);
+  const [loading, setLoading] = useState(false);
   const token = useTokenStore((state) => state.token);
   const resetToken = useTokenStore((state) => state.resetToken);
 
   useEffect(() => {
     if (token) {
       (async () => {
-        const [
-          newCollection,
-          newItem,
-          deleteCollection,
-          deleteItem,
-          shareCollection,
-        ] = await Promise.all([
-          getStats(StatsTypes.newCollection, token),
-          getStats(StatsTypes.newItem, token),
-          getStats(StatsTypes.deleteCollection, token),
-          getStats(StatsTypes.deleteItem, token),
-          getStats(StatsTypes.shareCollection, token),
-        ]);
-        setStatsData({
-          newCollection,
-          newItem,
-          deleteCollection,
-          deleteItem,
-          shareCollection,
-        });
+        setLoading(true);
+        try {
+          const [
+            newCollection,
+            newItem,
+            deleteCollection,
+            deleteItem,
+            shareCollection,
+          ] = await Promise.all([
+            getStats(StatsTypes.newCollection, token),
+            getStats(StatsTypes.newItem, token),
+            getStats(StatsTypes.deleteCollection, token),
+            getStats(StatsTypes.deleteItem, token),
+            getStats(StatsTypes.shareCollection, token),
+          ]);
+
+          setStatsData({
+            newCollection,
+            newItem,
+            deleteCollection,
+            deleteItem,
+            shareCollection,
+          });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
       })();
     }
   }, [token]);
@@ -75,30 +84,35 @@ function App() {
                 description="Created in this month."
                 unit="Collections"
                 data={statsData.newCollection}
+                loading={loading}
               />
               <StatCard
                 title="New Items"
                 description="Created in this month."
                 unit="Items"
                 data={statsData.newItem}
+                loading={loading}
               />
               <StatCard
                 title="Deleted Collections"
                 description="Deleted in this month."
                 unit="Collections"
                 data={statsData.deleteCollection}
+                loading={loading}
               />
               <StatCard
                 title="Deleted Items"
                 description="Deleted in this month."
                 unit="Items"
                 data={statsData.deleteItem}
+                loading={loading}
               />
               <StatCard
                 title="Shared Collections"
                 description="Shared in this month."
                 unit="Collections"
                 data={statsData.shareCollection}
+                loading={loading}
               />
             </div>
             <Button onClick={resetToken}>Logout</Button>
