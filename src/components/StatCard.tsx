@@ -44,6 +44,8 @@ export function StatCard({
       : 0
   );
 
+  const lastYearTotal = data.reduce((prev, curr) => prev + curr.point, 0);
+
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -93,7 +95,15 @@ export function StatCard({
         )}
       </CardContent>
       <CardFooter className="text-sm text-muted-foreground justify-center">
-        {!loading && 'last 12 months'}
+        {!loading && (
+          <div className="text-center">
+            <p>
+              <b className="text-base text-card-foreground">{lastYearTotal}</b>{' '}
+              total
+            </p>
+            <p>last 12 months</p>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
